@@ -1,0 +1,14 @@
+---
+
+- hosts: all
+  tasks:
+    - name: install nginx
+      package:
+        name: nginx
+        state: present
+
+    - name: create index.html 
+      copy:
+        dest: /var/www/html/index.html
+        content: "Welcome to my website"    
+      

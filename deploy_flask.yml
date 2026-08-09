@@ -1,0 +1,43 @@
+---
+
+- hosts: all
+  become: yes 
+  tasks:
+    - name: install python3, python-pip
+      package:
+        name:
+          - python3
+          - python3-pip
+        state: present      
+  
+    - name: install flask via pip (Ubuntu)
+      pip:
+        name: flask
+        state: present
+        extra_args: --break-system-packages
+      when: ansible_os_family == "Debian"
+
+    - name: install flask via pip (Centos)  
+      pip:
+        name: flask
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Create flask application code
+      copy:
+        dest: /home/udi_saada/app.py
+        content: |
+          from flask import Flask
+          app = Flask(__name__)
+          
+          @app.route('/')
+          def hello():
+              return 'Hello from Flask app'
+          
+          if __name__ == '__main__':
+              app.run(host='0.0.0.0', port=5000) 
+
+    - name: Run flask application in background
+      shell: "nohup python3 /home/udi_saada/app.py > /dev/null 2>&1 &"
+
+

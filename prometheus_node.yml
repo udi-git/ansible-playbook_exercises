@@ -1,0 +1,16 @@
+---
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: update check (ubuntu) 
+      ansible.builtin.apt:
+        update_cache: true
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: install prometheus node exporter (ubuntu)
+      ansible.builtin.apt: 
+        name: prometheus-node-exporter 
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+

@@ -1,0 +1,15 @@
+---
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: add_user
+      ansible.builtin.user:
+        name: new_user
+        state: present
+
+    - name: delete_user
+      ansible.builtin.user:
+        name: old_user
+        state: absent
+        remove: true    
