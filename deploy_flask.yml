@@ -37,7 +37,27 @@
           if __name__ == '__main__':
               app.run(host='0.0.0.0', port=5000) 
 
-    - name: Run flask application in background
-      shell: "nohup python3 /home/udi_saada/app.py > /dev/null 2>&1 &"
+    - name: Create systemd service for Flask
+      copy:
+        dest: /etc/systemd/system/flask.service
+        content: |
+          [Unit]
+          Description=Flask Application Service
+          After=network.target
 
+          [Service]
+          User=root
+          WorkingDirectory=/home/udi_saada
+          ExecStart=/usr/bin/python3 /home/udi_saada/app.py
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Start and enable Flask service
+      systemd:
+        name: flask
+        state: started
+        enabled: yes
+        daemon_reload: yes
 

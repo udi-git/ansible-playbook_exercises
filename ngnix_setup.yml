@@ -1,6 +1,7 @@
 ---
 
 - hosts: all
+  become: yes
   tasks:
     - name: install nginx
       package:
@@ -11,4 +12,9 @@
       copy:
         dest: /var/www/html/index.html
         content: "Welcome to my website"    
-      
+    
+    - name: Ensure Nginx engine is running and enabled
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: yes    
